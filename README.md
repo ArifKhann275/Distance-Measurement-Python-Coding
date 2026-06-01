@@ -1,20 +1,110 @@
-# Monocular Video Distance Tracking (YOLOv8 + MiDaS + Optical Flow)
+# 🎯 Real-Time Human Distance Measurement using YOLOv8, MiDaS and Optical Flow
 
-This repository contains a Python script that estimates the real-world distance traveled by individuals in a standard 2D video. It combines object detection, monocular depth estimation, and optical flow to calculate displacement in both lateral (x, y) and depth (z) axes.
+## 📌 Project Overview
 
-## Methodology
+This project estimates the distance traveled by people in a video using computer vision techniques. The system combines object detection, depth estimation, and optical flow tracking to measure human movement in real-world units (meters).
 
-Measuring absolute distance from a single uncalibrated camera is an ill-posed problem. This script attempts to solve it by combining three techniques:
+The main goal of this project was to explore how multiple computer vision models can be integrated to perform approximate real-world distance measurement from a single video stream.
 
-1. **Detection:** YOLOv8 (`yolov8n.pt`) is used to detect and draw bounding boxes around people in the frame.
-2. **Depth Estimation:** MiDaS (`intel-isl/MiDaS`) generates a relative depth map of the scene. The median depth value within the center of a detected bounding box is used as the object's z-axis position.
-3. **Lateral Tracking:** Lucas-Kanade Optical Flow (`cv2.calcOpticalFlowPyrLK`) extracts and tracks keypoints (using `goodFeaturesToTrack`) within the bounding box to measure pixel displacement between frames.
-4. **Distance Calculation:** To convert pixel and relative depth changes into real-world meters, the script requires a reference scale. By default, it uses an **Assumed Height** constraint (1.70 meters). It calculates the `meters_per_pixel` ratio based on the bounding box height. 
-   Total displacement per frame is calculated as the hypotenuse of the lateral step and the depth step.
+---
 
-## Requirements
+## ✨ Features
 
-The code is heavily dependent on PyTorch and OpenCV. A CUDA-enabled GPU is highly recommended for real-time processing.
+* Person detection using YOLOv8
+* Monocular depth estimation using MiDaS
+* Optical Flow-based motion tracking
+* Multi-person tracking with unique IDs
+* Real-time distance estimation
+* Video output generation with annotations
+* Optional manual calibration using known real-world distances
 
-```bash
-pip install opencv-python numpy torch torchvision ultralytics
+---
+
+## ⚙️ How It Works
+
+### 1. Person Detection
+
+YOLOv8 detects people in each frame.
+
+### 2. Depth Estimation
+
+MiDaS generates a depth map for the scene.
+
+### 3. Motion Tracking
+
+Optical Flow tracks feature points between consecutive frames.
+
+### 4. Distance Calculation
+
+Lateral movement and depth changes are combined to estimate displacement.
+
+### 5. Distance Accumulation
+
+The total traveled distance is accumulated for each tracked person.
+
+---
+
+## 🛠️ Technologies Used
+
+* Python
+* OpenCV
+* YOLOv8 (Ultralytics)
+* MiDaS
+* PyTorch
+* NumPy
+
+---
+
+## 📏 Distance Estimation Strategy
+
+Since a monocular camera does not provide true depth information, distance estimation is approximated using:
+
+* Human height assumption (default: 1.7 m)
+* MiDaS relative depth values
+* Optical Flow displacement
+* Optional user calibration
+
+The estimated distance should therefore be considered an approximation rather than a precise measurement.
+
+---
+
+## 📊 Results
+
+The system can:
+
+* Detect and track multiple people
+* Visualize depth information
+* Estimate traveled distance in meters
+* Generate annotated output videos
+
+---
+
+## 🚀 Future Improvements
+
+* Integrate DeepSORT or ByteTrack for more robust tracking
+* Improve distance calibration methods
+* Support real-time webcam deployment
+* Explore stereo vision for more accurate depth estimation
+* Evaluate performance on crowded scenes
+
+---
+
+## 🖼️ Output Examples
+
+### Person Detection and Tracking
+
+(Add screenshot here)
+
+### Depth Map Visualization
+
+(Add screenshot here)
+
+### Distance Estimation Output
+
+(Add screenshot here)
+
+---
+
+## 📝 Notes
+
+This project was developed as a learning and research-oriented computer vision experiment. The focus was on combining detection, depth estimation, and tracking techniques to estimate human movement from monocular video data.
